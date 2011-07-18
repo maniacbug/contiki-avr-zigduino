@@ -11,3 +11,7 @@ Makefile.target
 doc/html
 patches-*
 tools/tunslip6
+*.hex
+*.swp
+*.orig
+*.avr-atmega128rfa1
