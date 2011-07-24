@@ -72,9 +72,9 @@ public class SerialDumpConnection extends CommandConnection {
     String osName = System.getProperty("os.name").toLowerCase();
     String fullCommand;
     if (osName.startsWith("win")) {
-      fullCommand = SERIALDUMP_WINDOWS + " " + "-b115200" + " " + getMappedComPortForWindows(comPort);
+      fullCommand = SERIALDUMP_WINDOWS + " "  + getMappedComPortForWindows(comPort);
     } else {
-      fullCommand = SERIALDUMP_LINUX + " " + "-b115200" + " " + comPort;
+      fullCommand = SERIALDUMP_LINUX + " "  + comPort;
     }
     setCommand(fullCommand);
     super.open(comPort);
