@@ -17,5 +17,7 @@ SERIAL_DUMP = $(CONTIKI)/tools/sky/serialdump-linux
 login:
 	$(SERIAL_DUMP) $(AVRDUDE_PORT)
 
+upload: $(CONTIKI_PROJECT).$(TARGET).u
+
 include $(CONTIKI_AVR)/Makefile.avr
 include $(CONTIKI_AVR)/radio/Makefile.radio
