@@ -83,7 +83,8 @@ ping6handler(process_event_t ev, process_data_t data)
   if(count == 0){
 #if MACDEBUG
 
-#if !NODE
+#if NODE
+#else 
 #error Must define NODE as the node id to ping
 #endif
     // Setup destination address.
