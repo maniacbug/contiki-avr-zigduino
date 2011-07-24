@@ -12,5 +12,10 @@ AVRDUDE_PROGRAMMER=arduino
 AVRDUDE_PORT ?= /dev/tty.usbserial-A4009YFR
 AVRDUDE_OPTIONS=-V -F -D -b 57600
 
+SERIAL_DUMP = $(CONTIKI)/tools/sky/serialdump-linux
+
+login:
+	$(SERIAL_DUMP) $(AVRDUDE_PORT)
+
 include $(CONTIKI_AVR)/Makefile.avr
 include $(CONTIKI_AVR)/radio/Makefile.radio
