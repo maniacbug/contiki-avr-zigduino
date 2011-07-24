@@ -48,6 +48,7 @@ AUTOSTART_PROCESSES(&hello_world_process);
 PROCESS_THREAD(hello_world_process, ev, data)
 {
     PROCESS_BEGIN();
+    PROCESS_PAUSE();
 
     printf("Hello, world\n");
 
