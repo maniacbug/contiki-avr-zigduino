@@ -54,7 +54,7 @@
     <copy todir="${dist}" file="${contiki}/examples/collect/collect-view-shell.ihex"/>
   </target>
 
-  <target name="dist" depends="jar,collect-view-shell.ihex">
+  <target name="dist" depends="jar">
     <copy todir="${dist}" file="collect-init.script"/>
     <mkdir dir="${dist}/tools"/>
     <copy todir="${dist}/tools">
