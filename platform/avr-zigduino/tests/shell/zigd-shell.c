@@ -66,7 +66,11 @@ PROCESS_THREAD(example_shell_process, ev, data)
   shell_text_init();
   shell_ping_init();
   shell_netstat_init();
+  
+  shell_powertrace_init();
+  shell_collect_view_init();
 
   PROCESS_END();
 }
+// vim:ai:cin:sts=2 sw=2
 /*---------------------------------------------------------------------------*/
