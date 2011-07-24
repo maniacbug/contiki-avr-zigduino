@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = shell
+CONTIKI_PROJECT = zigd-shell
 all: $(CONTIKI_PROJECT)
 
 APPS = serial-shell
