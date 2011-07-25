@@ -351,12 +351,19 @@ uip_ipchksum(void)
   return (sum == 0) ? 0xffff : uip_htons(sum);
 }
 #endif
+
+#ifdef __AVR__
+#define AVR_VOLATILE volatile
+#else
+#define AVR_VOLATILE
+#endif
+
 /*---------------------------------------------------------------------------*/
 static u16_t
 upper_layer_chksum(u8_t proto)
 {
-  u16_t upper_layer_len;
-  u16_t sum;
+  AVR_VOLATILE u16_t upper_layer_len;
+  AVR_VOLATILE u16_t sum;
   
   upper_layer_len = (((u16_t)(UIP_IP_BUF->len[0]) << 8) + UIP_IP_BUF->len[1] - uip_ext_len) ;
   
