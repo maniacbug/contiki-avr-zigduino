@@ -38,7 +38,7 @@
 
 #define MACDEBUG 0
 
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -69,6 +69,17 @@ AUTOSTART_PROCESSES(&ping6_process);
 static u8_t
 ping6handler(process_event_t ev, process_data_t data)
 {
+  if(ev == tcpip_icmp6_event) {
+    switch(*((uint8_t *)data)){
+    case ICMP6_ECHO_REPLY:
+      PRINTF("Echo reply received.\n");
+      break;
+    default:
+      PRINTF("Other ICMP6 message received.\n");
+    }
+    return 1;
+  }
+ 
   if(count == 0){
 #if MACDEBUG
     // Setup destination address.
@@ -164,6 +175,7 @@ PROCESS_THREAD(ping6_process, ev, data)
   PRINTF("Wait for DAD\n");
 
   etimer_set(&ping6_periodic_timer, 15*CLOCK_SECOND);
+  icmp6_new(NULL);
 
   while(cont) {
     PROCESS_YIELD();
