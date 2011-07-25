@@ -46,8 +46,8 @@
 #error Change SERIAL_LINE_CONF_BUFSIZE in contiki-conf.h.
 #endif
 
-#define IGNORE_CHAR(c) (c == 0x0d)
-#define END 0x0a
+#define END1 0x0d
+#define END2 0x0a
 
 static struct ringbuf rxbuf;
 static uint8_t rxbuf_data[BUFSIZE];
@@ -62,10 +62,6 @@ serial_line_input_byte(unsigned char c)
 {
   static uint8_t overflow = 0; /* Buffer overflow: ignore until END */
   
-  if(IGNORE_CHAR(c)) {
-    return 0;
-  }
-
   if(!overflow) {
     /* Add character */
     if(ringbuf_put(&rxbuf, c) == 0) {
@@ -75,7 +71,7 @@ serial_line_input_byte(unsigned char c)
   } else {
     /* Buffer overflowed:
      * Only (try to) add terminator characters, otherwise skip */
-    if(c == END && ringbuf_put(&rxbuf, c) != 0) {
+    if( (c == END1 || c == END2) && ringbuf_put(&rxbuf, c) != 0) {
       overflow = 0;
     }
   }
@@ -84,6 +80,7 @@ serial_line_input_byte(unsigned char c)
   process_poll(&serial_line_process);
   return 1;
 }
+
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(serial_line_process, ev, data)
 {
@@ -103,7 +100,7 @@ PROCESS_THREAD(serial_line_process, ev, data)
       /* Buffer empty, wait for poll */
       PROCESS_YIELD();
     } else {
-      if(c != END) {
+      if(c != END1 && c != END2) {
         if(ptr < BUFSIZE-1) {
           buf[ptr++] = (uint8_t)c;
         } else {
