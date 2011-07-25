@@ -440,9 +440,10 @@ PROCESS_THREAD(shell_process, ev, data)
 
   /* Let the system start up before showing the prompt. */
   PROCESS_PAUSE();
-  
+ 
+  shell_start();
+ 
   while(1) {
-    shell_prompt(shell_prompt_text);
     
     PROCESS_WAIT_EVENT_UNTIL(ev == shell_event_input);
     {
@@ -459,6 +460,7 @@ PROCESS_THREAD(shell_process, ev, data)
       }
       front_process = &shell_process;
     }
+    shell_prompt(shell_prompt_text);
   }
   
   PROCESS_END();
