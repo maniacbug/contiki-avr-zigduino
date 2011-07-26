@@ -3,6 +3,7 @@ all: $(CONTIKI_PROJECT)
 
 APPS = serial-shell
 CONTIKI = ../../../..
+CONTIKI_TARGET_SOURCEFILES += shell-udphello.c
 UIP_CONF_IPV6=1
 TARGET=avr-zigduino
 
