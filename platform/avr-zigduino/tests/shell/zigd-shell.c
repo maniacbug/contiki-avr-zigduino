@@ -50,6 +50,7 @@
 #include <string.h>
 
 void shell_udphello_init(void);
+void shell_udp_sendcmd_init(void);
 
 /*---------------------------------------------------------------------------*/
 PROCESS(example_shell_process, "Contiki shell");
@@ -69,6 +70,7 @@ PROCESS_THREAD(example_shell_process, ev, data)
   shell_ping_init();
   shell_netstat_init();
   shell_udphello_init();
+  shell_udp_sendcmd_init();
 
   PROCESS_END();
 }
