@@ -49,6 +49,8 @@
 #include <stdio.h>
 #include <string.h>
 
+void shell_udphello_init(void);
+
 /*---------------------------------------------------------------------------*/
 PROCESS(example_shell_process, "Contiki shell");
 AUTOSTART_PROCESSES(&example_shell_process);
@@ -66,6 +68,7 @@ PROCESS_THREAD(example_shell_process, ev, data)
   shell_text_init();
   shell_ping_init();
   shell_netstat_init();
+  shell_udphello_init();
 
   PROCESS_END();
 }
