@@ -110,6 +110,10 @@ static bool get_mac_from_eeprom(uint8_t* macptr)
 /*------Done in a subroutine to keep main routine stack usage small--------*/
 void initialize(void)
 {
+#if WITH_SLIP
+  //Slip border router on uart0
+  rs232_init(RS232_PORT_0, USART_BAUD_38400,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
+#else
   /* First rs232 port for debugging */
   rs232_init(RS232_PORT_0, USART_BAUD_57600,USART_PARITY_NONE | USART_STOP_BITS_1 | USART_DATA_BITS_8);
 
@@ -118,7 +122,7 @@ void initialize(void)
 
   /* Get input from first port */
   rs232_set_input(RS232_PORT_0, serial_line_input_byte);
-
+#endif
   clock_init();
 
   if(MCUSR & (1<<PORF )) PRINTA("Power-on reset.\n");
