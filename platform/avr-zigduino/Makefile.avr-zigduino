@@ -6,8 +6,11 @@ CONTIKI_TARGET_SOURCEFILES += $(CONTIKI_CORE).c leds-arch.c
 CONTIKI_AVR=$(CONTIKI)/cpu/avr
 CONTIKI_PLAT_DEFS = -DF_CPU=16000000UL -DAUTO_CRC_PADDING=2
 
+# Many examples expect a button sensor
+CONTIKI_TARGET_SOURCEFILES += button-sensor.c sensors.c
+
 ifeq ($(WITH_SLIP),1)
-CONTIKI_TARGET_SOURCEFILES += slip_uart0.c slip.c button-sensor.c sensors.c
+CONTIKI_TARGET_SOURCEFILES += slip_uart0.c slip.c 
 CFLAGS += -DWITH_SLIP=$(WITH_SLIP) 
 endif
 
