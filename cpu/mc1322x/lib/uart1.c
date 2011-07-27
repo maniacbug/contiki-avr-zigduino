@@ -28,7 +28,7 @@
  * SUCH DAMAGE.
  *
  * This file is part of libmc1322x: see http://mc1322x.devl.org
- * for details. 
+ * for details.
  *
  *
  */
@@ -47,22 +47,24 @@ volatile uint32_t u1_rx_head, u1_rx_tail;
 void uart1_isr(void) {
 
 #if UART1_RX_BUFFERSIZE > 32
-  if (*UART1_USTAT & ( 1 << 6)) {   //receive interrupt
- 	while( *UART1_URXCON != 0 ) {   //flush the hardware fifo into the software buffer
-        uint32_t u1_rx_tail_next;
-        u1_rx_tail_next = u1_rx_tail+1;		
-		if (u1_rx_tail_next >= sizeof(u1_rx_buf))
-			u1_rx_tail_next = 0;
-        if (u1_rx_head != u1_rx_tail_next) {
-		    u1_rx_buf[u1_rx_tail]= *UART1_UDATA;       
-		    u1_rx_tail =  u1_rx_tail_next;
-        }
+	if (*UART1_USTAT & ( 1 << 6)) {   //receive interrupt
+		while( *UART1_URXCON != 0 ) {   //flush the hardware fifo into the software buffer
+			uint32_t u1_rx_tail_next;
+			u1_rx_tail_next = u1_rx_tail+1;
+			if (u1_rx_tail_next >= sizeof(u1_rx_buf))
+				u1_rx_tail_next = 0;
+			if (u1_rx_head != u1_rx_tail_next) {
+				u1_rx_buf[u1_rx_tail]= *UART1_UDATA;
+				u1_rx_tail =  u1_rx_tail_next;
+			} else { //buffer is full, flush the fifo
+				while (*UART1_URXCON !=0) if (*UART1_UDATA);
+			}
+		}
+		return;
 	}
-    return;
-  }
 #endif
 
- 	while( *UART1_UTXCON != 0 ) {
+	while( *UART1_UTXCON != 0 ) {
 		if (u1_tx_head == u1_tx_tail) {
 #if UART1_RX_BUFFERSIZE > 32
             *UART1_UCON |= (1 << 13); /*disable tx interrupt */
@@ -73,7 +75,7 @@ void uart1_isr(void) {
 		}
 
 		*UART1_UDATA = u1_tx_buf[u1_tx_tail];
-		u1_tx_tail++;		
+		u1_tx_tail++;
 		if (u1_tx_tail >= sizeof(u1_tx_buf))
 			u1_tx_tail = 0;
 	}
@@ -81,7 +83,7 @@ void uart1_isr(void) {
 
 void uart1_putc(char c) {
 	/* disable UART1 since */
-	/* UART1 isr modifies u1_tx_head and u1_tx_tail */ 
+	/* UART1 isr modifies u1_tx_head and u1_tx_tail */
 #if UART1_RX_BUFFERSIZE > 32
             *UART1_UCON |= (1 << 13); /*disable tx interrupt */
 #else
@@ -97,11 +99,29 @@ void uart1_putc(char c) {
 		if (u1_tx_head >= sizeof(u1_tx_buf))
 			u1_tx_head = 0;
 		if (u1_tx_head == u1_tx_tail) { /* drop chars when no room */
+#if UART1_DROP_CHARS
 			if (u1_tx_head) { u1_tx_head -=1; } else { u1_tx_head = sizeof(u1_tx_buf); }
+#else
+			{
+				uint32_t  u1_tx_tail_save=u1_tx_tail;
+                                /* Back up head to show buffer not empty, and enable tx interrupt */
+				u1_tx_head--;
+#if UART1_RX_BUFFERSIZE > 32
+				*UART1_UCON &= ~(1 << 13); /*enable tx interrupt */
+#else
+				enable_irq(UART1);
+#endif
+                                /* Tail will change after one character goes out */
+				while (u1_tx_tail_save == u1_tx_tail) ;
+                                /* Restore head to character we just stuffed */
+				u1_tx_head++;
+				return;
+			}
+#endif /* UART1_DROP_CHARS */
 		}
 
 #if UART1_RX_BUFFERSIZE > 32
-        *UART1_UCON &= ~(1 << 13); /*enable tx interrupt */
+		*UART1_UCON &= ~(1 << 13); /*enable tx interrupt */
 #else
 		enable_irq(UART1);
 #endif
