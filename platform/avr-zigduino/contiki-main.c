@@ -123,6 +123,7 @@ void initialize(void)
   /* Get input from first port */
   rs232_set_input(RS232_PORT_0, serial_line_input_byte);
 #endif
+
   clock_init();
 
   if(MCUSR & (1<<PORF )) PRINTA("Power-on reset.\n");
