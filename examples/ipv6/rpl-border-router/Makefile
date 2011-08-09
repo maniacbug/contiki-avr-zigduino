@@ -1,4 +1,5 @@
-all: border-router
+CONTIKI_PROJECT=border-router
+all: $(CONTIKI_PROJECT) 
 
 CONTIKI=../../..
 
@@ -15,7 +16,6 @@ PROJECT_SOURCEFILES += slip-bridge.c
 # WITH_WEBSERVER=webserver for /apps/webserver
 # WITH_WEBSERVER=raven-webserver for /platform/avr-raven/apps/raven-webserver/
 #make clean before changing webservers!
-WITH_WEBSERVER=1
 ifeq ($(WITH_WEBSERVER),1)
 CFLAGS += -DWEBSERVER=1
 PROJECT_SOURCEFILES += httpd-simple.c
