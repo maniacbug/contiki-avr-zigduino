@@ -36,12 +36,6 @@
 
 #include "net/netstack.h"
 #include "dev/button-sensor.h"
-#include "dev/serial-line.h"
-#if CONTIKI_TARGET_Z1
-#include "dev/uart0.h"
-#else
-#include "dev/uart1.h"
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -82,13 +76,6 @@ collect_common_send(void)
 void
 collect_common_net_init(void)
 {
-#if CONTIKI_TARGET_Z1
-  uart0_set_input(serial_line_input_byte);
-#else
-  uart1_set_input(serial_line_input_byte);
-#endif
-  serial_line_init();
-
   PRINTF("I am sink!\n");
 }
 /*---------------------------------------------------------------------------*/

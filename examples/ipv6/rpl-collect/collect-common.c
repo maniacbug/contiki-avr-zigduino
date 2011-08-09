@@ -44,6 +44,8 @@
 #include "collect-common.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
 
 static unsigned long time_offset;
