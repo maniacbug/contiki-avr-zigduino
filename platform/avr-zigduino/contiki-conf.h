@@ -88,6 +88,9 @@ unsigned long clock_seconds(void);
 /* Starting address for code received via the codeprop facility. Not tested on Raven */
 //#define EEPROMFS_ADDR_CODEPROP 0x8000
 
+/* RADIOSTATS is used in rf230bb, clock.c and the webserver cgi to report radio usage */
+#define RADIOSTATS 1
+
 /* Network setup. The new NETSTACK interface requires RF230BB (as does ip4) */
 #if RF230BB
 #undef PACKETBUF_CONF_HDR_SIZE                  //Use the packetbuf default for header size
@@ -100,7 +103,11 @@ unsigned long clock_seconds(void);
 #define UIP_CONF_ICMP6            1
 #define UIP_CONF_UDP              1
 #define UIP_CONF_TCP              1
-#define UIP_CONF_IPV6_RPL         0
+
+#ifndef UIP_CONF_IPV6_RPL
+#define UIP_CONF_IPV6_RPL         1
+#endif
+
 #define NETSTACK_CONF_NETWORK       sicslowpan_driver
 #define SICSLOWPAN_CONF_COMPRESSION SICSLOWPAN_COMPRESSION_HC06
 #else
@@ -272,4 +279,13 @@ unsigned long clock_seconds(void);
 #ifdef PROJECT_CONF_H
 #include PROJECT_CONF_H
 #endif /* PROJECT_CONF_H */
+
+/* Override ridiculously small buffer sizes */
+
+#undef UIP_CONF_BUFFER_SIZE
+#define UIP_CONF_BUFFER_SIZE    1300
+
+#undef UIP_CONF_RECEIVE_WINDOW
+#define UIP_CONF_RECEIVE_WINDOW  1250
+
 #endif /* __CONTIKI_CONF_H__ */
