@@ -208,11 +208,14 @@ void initialize(void)
   uip_ip6addr_t ipaddr;
   uip_ip6addr(&ipaddr, 0xfdfd, 0, 0, 0, 0, 0, 0, addr.u8[7]);
   uip_ds6_addr_add(&ipaddr, 0, ADDR_AUTOCONF);
+#if UIP_CONF_ROUTER
+  uip_ds6_prefix_add(&ipaddr,64,0,0,0,0);
+#else
   uip_ds6_prefix_add(&ipaddr,64,0);
-  
+#endif
+  printf("Autostart other processes\n");
   /* Autostart other processes */
   autostart_start(autostart_processes);
-
 
   /*--------------------------Announce the configuration---------------------*/
 #if ANNOUNCE_BOOT
