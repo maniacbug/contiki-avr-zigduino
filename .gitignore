@@ -15,3 +15,5 @@ tools/tunslip6
 *.swp
 *.orig
 *.avr-atmega128rfa1
+*.avr-zigduino
+*.bak

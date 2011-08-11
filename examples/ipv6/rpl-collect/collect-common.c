@@ -96,7 +96,7 @@ collect_common_recv(const rimeaddr_t *originator, uint8_t seqno, uint8_t hops,
   printf(" %lu %lu 0", ((time >> 16) & 0xffff), time & 0xffff);
   /* Ignore latency for now */
   printf(" %u %u %u %u",
-         originator->u8[0] + (originator->u8[1] << 8), seqno, hops, 0);
+         originator->u8[1] + (originator->u8[0] << 8), seqno, hops, 0);
   for(i = 0; i < payload_len / 2; i++) {
     memcpy(&data, payload, sizeof(data));
     payload += sizeof(data);
