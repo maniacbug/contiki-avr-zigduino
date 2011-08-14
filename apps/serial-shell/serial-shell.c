@@ -78,7 +78,7 @@ shell_default_output(const char *text1, int len1, const char *text2, int len2)
 void
 shell_prompt(char *str)
 {
-  printf("%d.%d: %s", rimeaddr_node_addr.u8[0], rimeaddr_node_addr.u8[1],
+  printf("%d.%d: %s", rimeaddr_node_addr.u8[RIMEADDR_SIZE - 2], rimeaddr_node_addr.u8[RIMEADDR_SIZE - 1],
 	 str);
 }
 /*---------------------------------------------------------------------------*/
