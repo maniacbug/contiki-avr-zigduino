@@ -64,7 +64,12 @@
 #include "dev/serial-line.h"
 #include "dev/slip.h"
 
+#include "lib/sensors.h"
+#include "dev/button-sensor.h"
 #include "dev/leds.h"
+
+// This Zidguino implementation presumes a single button 'sensor'
+SENSORS(&button_sensor);
 
 // Zigduino has not been tested with Rime.
 #if 0
@@ -148,6 +153,9 @@ void initialize(void)
   /* Initialize board LEDs */
   leds_init();
 
+  /* When used for testing, we should start with them off */
+  leds_off(LEDS_GREEN|LEDS_YELLOW);
+
   ctimer_init();
   /* Start radio and radio receive process */
   NETSTACK_RADIO.init();
@@ -193,11 +201,16 @@ void initialize(void)
 #endif
 
 #if UIP_CONF_ROUTER
-#warning Zigduino has not been tested with UIP_CONF_ROUTER
+//#warning Zigduino has not been tested with UIP_CONF_ROUTER
 #if ANNOUNCE_BOOT
   PRINTA("Routing Enabled\n");
 #endif
 #endif
+
+  /* Sensors process means all processes will get an event posted whenever sensors change.
+     Not always desired, so may want to put this on a compile switch. */
+  process_start(&sensors_process, NULL);
+  SENSORS_ACTIVATE(button_sensor);
 
   process_start(&tcpip_process, NULL);
 
