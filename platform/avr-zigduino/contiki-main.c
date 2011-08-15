@@ -226,6 +226,17 @@ void initialize(void)
 #else
   uip_ds6_prefix_add(&ipaddr,64,0);
 #endif
+
+  /* Create a route through the border router for site-local addresses, fec0::/64. */
+  uip_ds6_route_t *rep;
+  uip_ip6addr_t next_hop;
+  uip_ip6addr(&ipaddr, 0xfec0, 0, 0, 0, 0, 0, 0, 0);
+  uip_ip6addr(&next_hop, 0xaaaa, 0, 0, 0, 0, 0, 0, 1);
+  if((rep = uip_ds6_route_add(&ipaddr, 64, &next_hop, 0)) == NULL)
+  {
+    printf("*** Failed to add a route to fec0::/64\n");
+  }
+ 
   printf("Autostart other processes\n");
   /* Autostart other processes */
   autostart_start(autostart_processes);
