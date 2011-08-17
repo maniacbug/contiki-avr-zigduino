@@ -53,6 +53,7 @@ void webclient_closed(void);
 /* Functions. */
 void webclient_init(void);
 unsigned char webclient_get(const char *host, u16_t port, const char *file);
+unsigned char webclient_post(const char *host, u16_t port, const char *file, const char *formvars);
 void webclient_close(void);
 
 void webclient_appcall(void *state);
